@@ -11,7 +11,10 @@ var Game = (function() {
   };
 
   this.removeUpdateCallback = function(key) {
-
+    if(updateCallbacks.hasOwnProperty(key)) {
+      delete updateCallbacks[key];
+      callbackKeys = Object.getOwnPropertyNames(updateCallbacks);
+    }
   };
 
   var preload = function() {
@@ -23,7 +26,9 @@ var Game = (function() {
   };
 
   var update = function() {
-    var i = callbackKeys.length;
+    var i = callbackKeys.length - 1;
+    var callback;
+
     do {
       updateCallbacks[callbackKeys[i]]();
     } while (i--);
