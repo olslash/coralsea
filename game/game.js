@@ -1,19 +1,27 @@
 var Game = (function() {
   var updateCallbacks = {};
-  var callbackKeys = [];
+  // cache keys to avoid an Object.getOwnPropertyNames call on every tick
+  var updateCallbackKeys = [];
+  // same here-- don't want an empty check 60 times per second
+  var callbacksEmpty = true; 
 
   this.addUpdateCallback = function(key, cb) {
     if(!updateCallbacks.hasOwnProperty(key)) {
       updateCallbacks[key] = cb;
-      callbackKeys = Object.getOwnPropertyNames(updateCallbacks);
+      updateCallbackKeys = Object.getOwnPropertyNames(updateCallbacks);
+      callbacksEmpty = false;
+    } else {
+      console.log('something tried to register', key, 'but it already exists');
     }
-  
   };
 
   this.removeUpdateCallback = function(key) {
     if(updateCallbacks.hasOwnProperty(key)) {
       delete updateCallbacks[key];
-      callbackKeys = Object.getOwnPropertyNames(updateCallbacks);
+      updateCallbackKeys = Object.getOwnPropertyNames(updateCallbacks);
+      if(updateCallbackKeys.length === 0) callbacksEmpty = true;
+    } else {
+      console.log('something tried to remove', key, 'but it doesn\'t exist');
     }
   };
 
@@ -26,12 +34,14 @@ var Game = (function() {
   };
 
   var update = function() {
-    var i = callbackKeys.length - 1;
+    var i = updateCallbackKeys.length - 1;
     var callback;
-
-    do {
-      updateCallbacks[callbackKeys[i]]();
-    } while (i--);
+    if(!callbacksEmpty) {
+      do {
+        updateCallbacks[updateCallbackKeys[i]]();
+      } while (i--);
+    }
+    
   };
 
   var render = function() {
