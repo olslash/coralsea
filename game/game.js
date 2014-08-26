@@ -1,11 +1,11 @@
-var Game = (function() {
+window.Game = (function() {
   var updateCallbacks = {};
   // cache keys to avoid an Object.getOwnPropertyNames call on every tick
   var updateCallbackKeys = [];
   // same here-- don't want an empty check 60 times per second
   var callbacksEmpty = true; 
 
-  this.addUpdateCallback = function(key, cb) {
+  var addUpdateCallback = function(key, cb) {
     if(!updateCallbacks.hasOwnProperty(key)) {
       updateCallbacks[key] = cb;
       updateCallbackKeys = Object.getOwnPropertyNames(updateCallbacks);
@@ -15,7 +15,7 @@ var Game = (function() {
     }
   };
 
-  this.removeUpdateCallback = function(key) {
+  var removeUpdateCallback = function(key) {
     if(updateCallbacks.hasOwnProperty(key)) {
       delete updateCallbacks[key];
       updateCallbackKeys = Object.getOwnPropertyNames(updateCallbacks);
@@ -54,6 +54,11 @@ var Game = (function() {
     update:  update,
     render:  render
   }, false, true);
+
+  return {
+    addUpdateCallback: addUpdateCallback,
+    removeUpdateCallback: removeUpdateCallback
+  };
 })();
 
 
