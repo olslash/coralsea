@@ -1,0 +1,22 @@
+{
+  "name": "wargame",
+  "version": "0.0.0",
+  "authors": [
+    "Mitch R <olordhux+github@gmail.com>"
+  ],
+  "main": "game/game.js",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "fiber": "*",
+    "jquery": "~2.1.1",
+    "phaser": "~2.0.7"
+  }
+}
