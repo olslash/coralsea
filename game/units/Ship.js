@@ -7,7 +7,7 @@
 
 var Ship = Fiber.extend(function() {
   return{
-    init: function(game) {
+    init: function() {
       var health = 100;
 
       this.getHealth = function() {
@@ -15,13 +15,16 @@ var Ship = Fiber.extend(function() {
       };
 
       this.tick = function() {
-
+        // console.log(this.uuid, 'tick');
       };
-
-      game.addUpdateCallback(this.uuid, this.tick);
     }
   };
 });
 
 Fiber.mixin(Ship, hasUniqueId);
 var s = new Ship(Game);
+Game.addEntity(s);
+
+// i want the ship class to have a sprite. all ships must have a sprite, but
+// it's something that will be defined by subclasses since it's unique to
+// cruiser, carrier, etc.

@@ -1,30 +1,31 @@
 window.Game = (function() {
-  var updateCallbacks = {};
+  var entities = {};
   // cache keys to avoid an Object.getOwnPropertyNames call on every tick
-  var updateCallbackKeys = [];
+  var allEntityKeys = [];
   // same here-- don't want an empty check 60 times per second
-  var callbacksEmpty = true; 
+  var noEntitiesRegistered = true; 
 
-  var addUpdateCallback = function(key, cb) {
-    if(!updateCallbacks.hasOwnProperty(key)) {
-      updateCallbacks[key] = cb;
-      updateCallbackKeys = Object.getOwnPropertyNames(updateCallbacks);
-      callbacksEmpty = false;
+  var addEntity = function(entity) {
+    if(!entities.hasOwnProperty(entity.uuid)) {
+      entities[entity.uuid] = entity;
+      allEntityKeys = Object.getOwnPropertyNames(entities);
+      noEntitiesRegistered = false;
     } else {
-      console.log('something tried to register', key, 'but it already exists');
+      console.log('something tried to register', entity.uuid, 'but it already exists');
     }
   };
 
-  var removeUpdateCallback = function(key) {
-    if(updateCallbacks.hasOwnProperty(key)) {
-      delete updateCallbacks[key];
-      updateCallbackKeys = Object.getOwnPropertyNames(updateCallbacks);
-      if(updateCallbackKeys.length === 0) callbacksEmpty = true;
+  var removeEntity = function(entity) {
+    if(entities.hasOwnProperty(entity.uuid)) {
+      delete entities[entity.uuid];
+      allEntityKeys = Object.getOwnPropertyNames(entities);
+      if(allEntityKeys.length === 0) noEntitiesRegistered = true;
     } else {
-      console.log('something tried to remove', key, 'but it doesn\'t exist');
+      console.log('something tried to remove', entity.uuid, 'but it doesn\'t exist');
     }
   };
 
+  // -------- PHASER GAME LOOPS
   var preload = function() {
 
   };
@@ -34,11 +35,10 @@ window.Game = (function() {
   };
 
   var update = function() {
-    var i = updateCallbackKeys.length - 1;
-    var callback;
-    if(!callbacksEmpty) {
+    var i = allEntityKeys.length - 1;
+    if(!noEntitiesRegistered) {
       do {
-        updateCallbacks[updateCallbackKeys[i]]();
+        entities[allEntityKeys[i]].tick();
       } while (i--);
     }
     
@@ -56,8 +56,8 @@ window.Game = (function() {
   }, false, true);
 
   return {
-    addUpdateCallback: addUpdateCallback,
-    removeUpdateCallback: removeUpdateCallback
+    addEntity: addEntity,
+    removeEntity: removeEntity
   };
 })();
 
