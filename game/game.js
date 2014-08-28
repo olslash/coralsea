@@ -1,4 +1,5 @@
 window.Game = (function() {
+  var game;
   var entities = {};
   // cache keys to avoid an Object.getOwnPropertyNames call on every tick
   var allEntityKeys = [];
@@ -26,12 +27,19 @@ window.Game = (function() {
   };
 
   // -------- PHASER GAME LOOPS
-  var preload = function() {
-
+  var preload = function() {    
+    game.load.image('background', 'assets/oceanbg.png');
+    game.load.image('ship', 'assets/blockship.png');
   };
 
   var create = function() {
-
+    game.stage.backgroundColor = '#000000';
+    background = game.add.tileSprite(0, 0, 800, 600, 'background');
+    // background.scale.setTo(0.5, 0.5);
+    // game.world.setBounds(0,0,800,600);
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+    // testing
+    Game.addEntity(new Ship(game, 100, 100));
   };
 
   var update = function() {
@@ -48,7 +56,7 @@ window.Game = (function() {
 
   };
 
-  var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game', {
+  game = new Phaser.Game(800, 600, Phaser.AUTO, 'game', {
     preload: preload,
     create:  create,
     update:  update,
@@ -57,7 +65,9 @@ window.Game = (function() {
 
   return {
     addEntity: addEntity,
-    removeEntity: removeEntity
+    removeEntity: removeEntity,
+    game: game
+    // cursors: cursors
   };
 })();
 
