@@ -24,23 +24,15 @@ var Ship = Fiber.extend(function() {
 
       this.tick = function() {
         cursors = game.input.keyboard.createCursorKeys();
-        if (cursors.left.isDown)
-            {
-                this.sprite.angle -= 1;
-            }
-            else if (cursors.right.isDown)
-            {
-                this.sprite.angle += 1;
-            }
-
-            if (cursors.up.isDown)
-            {
-                //  The speed we'll travel at
-                currentSpeed = 50;
-            }
-            if(currentSpeed > 0) {
-              game.physics.arcade.velocityFromRotation(this.sprite.rotation - Math.PI/2, currentSpeed, this.sprite.body.velocity);
-            }
+        if (cursors.left.isDown) {
+          this.sprite.angle -= 1;
+        } else if (cursors.right.isDown) {
+          this.sprite.angle += 1;
+        } if (cursors.up.isDown) {
+          currentSpeed = 50;
+        } if(currentSpeed > 0) {
+          game.physics.arcade.velocityFromRotation(this.sprite.rotation - Math.PI/2, currentSpeed, this.sprite.body.velocity);
+        }
       };
     }
   };
